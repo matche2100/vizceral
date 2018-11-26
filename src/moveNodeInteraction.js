@@ -1,4 +1,5 @@
 import { Vector2 } from 'three';
+import { each, hasIn } from 'lodash';
 
 function getMouseLocInVPSpace (event, r) {
   r.x = event.clientX;
@@ -22,6 +23,36 @@ function MouseEventIsLeftButtonOrButtonIsUnknown (e) {
   return f;
 }
 
+function PathToJSON (paths, nodename, posx, posy) {
+  const root = {};
+
+  each(paths, (path) => {
+    const pathParts = path.split('/');
+    // pathParts.shift();
+    let i = 1;
+    const t = pathParts.length;
+
+    let currentLevel = root;
+
+    each(pathParts, (part) => {
+      part = part.trim();
+      const existingPath = hasIn(currentLevel, part);
+      if (existingPath) {
+        currentLevel = currentLevel[part];
+        i++;
+      } else {
+        currentLevel[part] = {};
+        currentLevel = currentLevel[part];
+        i++;
+        if (i > t) {
+          currentLevel[nodename] = { x: posx, y: posy };
+        }
+      }
+    });
+  });
+
+  return root;
+}
 
 const canCoerceToFiniteDouble = Number.isFinite;
 const DOUBLE_NAN = NaN;
@@ -144,6 +175,12 @@ class MoveNodeInteraction {
     const nodeView = node.view;
     if (nodeView) {
       nodeView.updatePosition();
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', this.vizceral.postPositionURL);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(JSON.stringify(PathToJSON([document.title], node.name, posX, posY)));
+
     }
     let connections = node.incomingConnections;
     for (let i = 0, n = connections.length; i < n; i++) {

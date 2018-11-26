@@ -58,7 +58,9 @@ class LTRTreeLayout {
   layoutPositions (graph, positions) {
     graph.nodes.forEach((node) => {
       if (positions[node.name]) {
-        node.updatePosition(positions[node.name]);
+        if (node.metadata.position) {
+          node.updatePosition(node.metadata.position);
+        } else node.updatePosition(positions[node.name]);
       }
     });
   }

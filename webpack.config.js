@@ -16,6 +16,7 @@ const config = {
     libraryTarget: 'umd',
     umdNamedDefine: true
   },
+  target: 'web',
   module: {
     rules: [
       {

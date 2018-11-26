@@ -150,6 +150,9 @@ class Vizceral extends EventEmitter {
       showLabels: true,
       allowDraggingOfNodes: false
     };
+
+    this.postPositionURL = '';
+
     this.filters = {};
 
     this.renderers = {
@@ -478,6 +481,17 @@ class Vizceral extends EventEmitter {
       this.modes = modes;
       this.updateModes(this.getGraph(this.rootGraphName));
     }
+  }
+
+  setPostPositionURL (URL) {
+    if (typeof URL !== 'string') {
+      Console.warn('Vizceral.setPostPositionURL: postPositionURL must be a string and URL but was: ', URL);
+      return;
+    }
+
+    this.postPositionURL = URL;
+
+    Console.debug('Set PostPositionURL: ', this.postPositionURL);
   }
 
   setOptions (options) {
