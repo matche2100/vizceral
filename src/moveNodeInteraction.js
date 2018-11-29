@@ -1,6 +1,8 @@
 import { Vector2 } from 'three';
 import { each, hasIn } from 'lodash';
 
+import { utils } from './utils';
+
 function getMouseLocInVPSpace (event, r) {
   r.x = event.clientX;
   r.y = event.clientY;
@@ -176,11 +178,12 @@ class MoveNodeInteraction {
     if (nodeView) {
       nodeView.updatePosition();
 
+      const graphpath = utils.getGraphPath(this.vizceral.currentGraph).join('/');
+
       const xhr = new XMLHttpRequest();
       xhr.open('POST', this.vizceral.postPositionURL);
       xhr.setRequestHeader('Content-Type', 'application/json');
-      xhr.send(JSON.stringify(PathToJSON([document.title], node.name, posX, posY)));
-
+      xhr.send(JSON.stringify(PathToJSON([graphpath], node.name, posX, posY)));
     }
     let connections = node.incomingConnections;
     for (let i = 0, n = connections.length; i < n; i++) {
