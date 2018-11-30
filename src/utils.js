@@ -1,6 +1,5 @@
 
-class utils {
-  getGraphPath (currentGraph) {
+exports.getGraphPath = function (currentGraph) {
     const graphPath = [];
 
     if (!currentGraph) {
@@ -11,6 +10,3 @@ class utils {
 
     return this.getGraphPath(currentGraph.parentGraph).concat(graphPath);
   }
-}
-
-export default utils;

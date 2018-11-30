@@ -1,7 +1,7 @@
 import { Vector2 } from 'three';
 import { each, hasIn } from 'lodash';
 
-import { utils } from './utils';
+const utils = require('./utils.js');
 
 function getMouseLocInVPSpace (event, r) {
   r.x = event.clientX;
